@@ -3,6 +3,7 @@ package me.wikmor.lpc;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.cacheddata.CachedMetaData;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -80,6 +81,11 @@ public final class LPC extends JavaPlugin implements Listener {
 		event.setFormat(format.replace("{message}", player.hasPermission("lpc.colorcodes") && player.hasPermission("lpc.rgbcodes")
 				? colorize(translateHexColorCodes(message)) : player.hasPermission("lpc.colorcodes") ? colorize(message) : player.hasPermission("lpc.rgbcodes")
 				? translateHexColorCodes(message) : message).replace("%", "%%"));
+
+		event.setCancelled(true);
+		for (Player reader : Bukkit.getOnlinePlayers()){
+			reader.sendMessage(PlaceholderAPI.setRelationalPlaceholders(player, reader, event.getFormat()));
+		}
 	}
 
 	private String colorize(final String message) {
